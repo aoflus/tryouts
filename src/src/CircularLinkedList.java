@@ -78,9 +78,18 @@ public class CircularLinkedList<E> implements List<E> {
 
 	@Override
 	public void add(int index, E element) {
+		if (index < 0) {
+			reverseAdd(index, element);
+		} else {
+			Node prev = getNode(index-1);
+			prev.next = new Node(element, prev.next);		
+			size++;
+		}
+	}
+	
+	private void reverseAdd(int index, E element) {
 		Node prev = getNode(index);
-		Node node = new Node(element, prev.next);
-		prev.next = node;
+		prev.next = new Node(element, prev.next);
 		size++;
 	}
 
