@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class CircularLinkedList<E> implements List<E> {
+public class CircularLinkedListImpl<E> implements List<E> {
 	
 	private int size;
 	private Node head;
@@ -15,10 +15,6 @@ public class CircularLinkedList<E> implements List<E> {
 		
 		public E element;
 		public Node next;
-		
-		public Node(E element) {
-			this.element = element;
-		}
 		
 		public Node(E element, Node next) {
 			this.element = element;
@@ -93,32 +89,50 @@ public class CircularLinkedList<E> implements List<E> {
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
-		// TODO Auto-generated method stub
-		return false;
+		boolean done = true;
+		for (E e : c) {
+			done = add(e);
+		}
+		return done;
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
-		// TODO Auto-generated method stub
-		return false;
+		int i = index;
+		for (E e : c) {
+			add(i, e);
+			i++;
+		}
+		return true;
 	}
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		this.size = 0;
+		this.head = null;
+		this.tail = null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean contains(Object o) {
-		// TODO Auto-generated method stub
+		Node node = head;
+		while (!node.next.equals(head)) {
+			if (node.element.equals((E) o)) {
+				return true;
+			}
+		}
 		return false;
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		for (Object o: c) {
+			if (!contains(o)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -126,16 +140,24 @@ public class CircularLinkedList<E> implements List<E> {
 		return getNode(index).element;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int indexOf(Object o) {
-		// TODO Auto-generated method stub
-		return 0;
+		int i = 0;
+		Node node = head;
+		while (!node.next.equals(head)) {
+			if (node.element.equals((E) o)) {
+				return i;
+			}
+			i++;
+			node = node.next;
+		}
+		return -1;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.size == 0;
 	}
 
 	@Override
@@ -144,10 +166,15 @@ public class CircularLinkedList<E> implements List<E> {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int lastIndexOf(Object o) {
-		// TODO Auto-generated method stub
-		return 0;
+		for (int i = size; i > 0; i--) {
+			if (getNode(i).element.equals((E) o)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 	@Override
@@ -164,32 +191,56 @@ public class CircularLinkedList<E> implements List<E> {
 
 	@Override
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+		int index = indexOf(o);
+		if (index == -1) {
+			return false;
+		}
+		remove(index);
+		return true;
 	}
 
 	@Override
 	public E remove(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		Node node = getNode(index-1);
+		Node removed = node.next;
+		if (index == 0) {
+			head = removed.next;
+		} else if (index == size-1) {
+			tail = node;
+		}
+		node.next= removed.next;
+		size--;
+		return removed.element;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		for (Object o : c) {
+			while (contains((E) o)) {
+				remove(o);
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+		for (int i = 0; i < size; i++) {
+			if (!c.contains(getNode(i).element)) {
+				remove(i);
+			}
+		}
+		
+		return true;
 	}
 
 	@Override
 	public E set(int index, E element) {
-		// TODO Auto-generated method stub
-		return null;
+		Node node = getNode(index);
+		E old = node.element;
+		node.element = element;
+		return old;
 	}
 
 	@Override

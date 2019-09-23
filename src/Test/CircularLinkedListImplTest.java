@@ -7,15 +7,15 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import src.CircularLinkedList;
+import src.CircularLinkedListImpl;
 
-class CircularLinkedListTest {
+class CircularLinkedListImplTest {
 
 	public List<Integer> list;
 	
 	@BeforeEach
 	public void setUp() {
-		list = new CircularLinkedList<Integer>();
+		list = new CircularLinkedListImpl<Integer>();
 		list.add(new Integer(4));
 		list.add(new Integer(7));
 		list.add(new Integer(1));
